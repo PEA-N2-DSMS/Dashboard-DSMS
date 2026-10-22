@@ -10,28 +10,29 @@ function renderRows(){const pages=Math.max(1,Math.ceil(filtered.length/4));page=
 function detail(id){const r=all.find(r=>r.wbs===id),orig=raw.filter(x=>x.wbs===id);$('detailBody').innerHTML='<h2>'+esc(id)+'</h2>'+orig.map(x=>'<p class="note">'+[['ลำดับ (A)',x.sequence],['จุดรวมงาน (B)',x.center],['การไฟฟ้า (C)',x.office],['ชื่องาน (E)',x.name],['สถานะ (J)',x.status],['มูลค่าตามแผนงาน (M)',fmt(x.planValue)],['KPI / เกณฑ์วัด AUC (N)',x.kpi],['กำหนดปิดงาน (O)',x.deadline],['หมวด / ปี (Q)',x.group]].map(([k,v])=>esc(k)+': '+esc(v??'—')).join('<br>')+'</p>').join('');$('detail').showModal()}
 $('close').onclick=()=>$('detail').close();keys.forEach(k=>$(k).onchange=update);$('q').oninput=update;$('reset').onclick=()=>{keys.forEach(k=>$(k).value='');$('q').value='';update()};$('prev').onclick=()=>{page--;renderRows()};$('next').onclick=()=>{page++;renderRows()};$('export').onclick=()=>{const cols=['sequence','center','office','wbs','name','status','planValue','kpi','deadline','group'];const quote=v=>'"'+String(v??'').replace(/^[=+@-]/,"'$&").replace(/"/g,'""')+'"';const csv='\uFEFF'+[cols,...filtered.map(r=>cols.map(k=>r[k]))].map(a=>a.map(quote).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='DSMS-filtered.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
 const SHEET_ID='19X2m52Usus6xGWhr32mY7CQASpt5Lg0hPBej8VOG-uo';
-function parseSheet(payload){
+function parseSheet(payload,sheetName='HB_2-JA_2-M4_2'){
  if(payload.status!=='ok'||!payload.table)throw Error('Google Sheets ไม่ส่งข้อมูลที่อ่านได้');
  const cols=payload.table.cols;
  if(!cols.find(c=>c.id==='D')?.label.includes('WBS')||!cols.find(c=>c.id==='M')?.label.includes('มูลค่า'))throw Error('โครงสร้างคอลัมน์ต้นฉบับเปลี่ยน กรุณาตรวจสอบ');
  const records=payload.table.rows.map(row=>{
  const cell=i=>row.c[cols.findIndex(c=>c.id===String.fromCharCode(65+i))],v=i=>cell(i)?.v??null,text=i=>cell(i)?.f??v(i);
- return {wbs:v(3),name:v(4),center:v(1),office:v(2),group:v(16),status:v(9),planValue:v(12),kpi:text(13),deadline:text(14),source:'HB_2-JA_2-M4_2',sequence:v(0)};
+ return {wbs:v(3),name:v(4),center:v(1),office:v(2),group:v(16),status:v(9),planValue:v(12),kpi:text(13),deadline:text(14),source:sheetName,sequence:v(0)};
  }).filter(r=>typeof r.wbs==='string'&&/^I-\d{2}-B-[A-Z0-9]+\.(HB|JA|M4)\.[23]\d{3}$/i.test(r.wbs.trim())).map(r=>({...r,wbs:r.wbs.trim()}));
  if(!records.length)throw Error('ไม่พบรายการงาน ข้อมูลเดิมยังคงอยู่');
  records.budgets=payload.table.rows.map(row=>{const v=id=>row.c[cols.findIndex(c=>c.id===id)]?.v??null;return {wbs:v('T'),allocated:v('U'),approved:v('V'),remaining:v('W')}}).filter(r=>typeof r.wbs==='string'&&r.wbs.startsWith('I-'));
  return records;
 }
-function readLive(){return new Promise((resolve,reject)=>{
- const callback='dsmsSheet'+Date.now(),script=document.createElement('script');
+function readSheet(config){return new Promise((resolve,reject)=>{
+ const callback='dsmsSheet'+config.gid+'_'+Date.now(),script=document.createElement('script');
  const clean=()=>{clearTimeout(timer);script.remove();delete window[callback]};
  const timer=setTimeout(()=>{clean();reject(Error('หมดเวลารอ Google Sheets'))},25000);
- window[callback]=data=>{clean();try{resolve(parseSheet(data))}catch(e){reject(e)}};
+ window[callback]=data=>{clean();try{resolve(parseSheet(data,config.name))}catch(e){reject(e)}};
  script.onerror=()=>{clean();reject(Error('เชื่อมต่อ Google Sheets ไม่สำเร็จ กรุณาตรวจสิทธิ์การอ่านหรือลองใหม่'))};
- const params=new URLSearchParams({gid:'218987743',sheet:'HB_2-JA_2-M4_2',range:'A:W',tq:'select A,B,C,D,E,J,M,N,O,Q,T,U,V,W',headers:'1',tqx:'out:json;responseHandler:'+callback,_:String(Date.now())});
+ const params=new URLSearchParams({gid:config.gid,sheet:config.name,range:'A:W',tq:'select A,B,C,D,E,J,M,N,O,Q,T,U,V,W',headers:'1',tqx:'out:json;responseHandler:'+callback,_:String(Date.now())});
  script.src='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?'+params;
  document.head.appendChild(script);
 })}
+async function readLive(){const batches=await Promise.all([{gid:'218987743',name:'HB_2-JA_2-M4_2'},{gid:'1045580958',name:'HB_3-JA_3-M4_3'}].map(readSheet));const records=batches.flat();records.budgets=[...new Map(batches.flatMap(b=>b.budgets||[]).map(r=>[r.wbs,r])).values()];return records;}
 function applyRecords(records){raw=records;all=[...new Map(raw.map(r=>[r.wbs,r])).values()];keys.forEach(k=>options(k,all));update()}
 async function refresh(){
  $('refresh').disabled=true;$('refresh').textContent='กำลังดึงข้อมูล…';$('error').textContent='';
@@ -63,7 +64,7 @@ function scopeMatch(r){return (!$('group').value||String(r.group||'').startsWith
 function renderStatusStrip(){
  const base=all.filter(r=>scopeMatch(r)&&(!$('center').value||r.center===$('center').value)&&(!$('office').value||r.office===$('office').value));
  const codes=[...Object.keys(STATUS_LABELS),...new Set(base.map(r=>r.status).filter(s=>s&&!STATUS_LABELS[s]))];
- $('scopeCount').textContent=base.length?base.length+' งาน · '+new Set(base.map(r=>r.center)).size+' จุดรวมงาน':'ยังไม่พบข้อมูลหมวด / ปีนี้ในคอลัมน์ Q ของชีตที่เลือก';
+ $('scopeCount').textContent=base.length?base.length+' งาน · '+new Set(base.map(r=>r.center)).size+' จุดรวมงาน':'ยังไม่พบข้อมูลหมวด / ปีนี้ในคอลัมน์ Q ของชีตที่เชื่อมต่อ';
  $('statusStrip').innerHTML=codes.map(code=>{const n=base.filter(r=>r.status===code).length;return '<button title="'+esc(code+' · '+statusText(code))+'" data-stage="'+esc(code[0])+'" data-status-code="'+esc(code)+'" class="'+($('status').value===code?'active':'')+'"><span>'+esc(code)+'</span><b>'+n+'</b></button>'}).join('');
  $('statusStrip').querySelectorAll('button').forEach(b=>b.onclick=()=>{$('status').value=b.dataset.statusCode;update();selectView('records')});
  const counts=Object.entries(base.reduce((m,r)=>{const k=(r.center||'ไม่ระบุ')+'|'+(r.status||'ไม่ระบุ');m[k]=(m[k]||0)+1;return m},{}));
