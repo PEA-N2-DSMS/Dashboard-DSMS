@@ -16,7 +16,7 @@ function parseSheet(payload,sheetName='HB_2-JA_2-M4_2'){
  if(!cols.find(c=>c.id==='D')?.label.includes('WBS')||!cols.find(c=>c.id==='M')?.label.includes('มูลค่า'))throw Error('โครงสร้างคอลัมน์ต้นฉบับเปลี่ยน กรุณาตรวจสอบ');
  const records=payload.table.rows.map(row=>{
  const cell=i=>row.c[cols.findIndex(c=>c.id===String.fromCharCode(65+i))],v=i=>cell(i)?.v??null,text=i=>cell(i)?.f??v(i);
- return {wbs:v(3),name:v(4),center:v(1),office:v(2),group:v(16),status:v(9),planValue:v(12),kpi:text(13),deadline:text(14),source:sheetName,sequence:v(0),fullRow:sheetName==='HB_2-JA_2-M4_2'?Array.from({length:19},(_,i)=>text(i)):null,fullHeaders:sheetName==='HB_2-JA_2-M4_2'?Array.from({length:19},(_,i)=>cols.find(c=>c.id===String.fromCharCode(65+i))?.label||String.fromCharCode(65+i)):null};
+ return {wbs:v(3),name:v(4),center:v(1),office:v(2),group:v(16),status:v(9),planValue:v(12),kpi:text(13),deadline:text(14),source:sheetName,sequence:v(0),fullRow:['HB_2-JA_2-M4_2','HB_3-JA_3-M4_3'].includes(sheetName)?Array.from({length:19},(_,i)=>text(i)):null,fullHeaders:['HB_2-JA_2-M4_2','HB_3-JA_3-M4_3'].includes(sheetName)?Array.from({length:19},(_,i)=>cols.find(c=>c.id===String.fromCharCode(65+i))?.label||String.fromCharCode(65+i)):null};
  }).filter(r=>typeof r.wbs==='string'&&/^I-\d{2}-B-[A-Z0-9]+\.(HB|JA|M4)\.[23]\d{3}$/i.test(r.wbs.trim())).map(r=>({...r,wbs:r.wbs.trim()}));
  if(!records.length)throw Error('ไม่พบรายการงาน ข้อมูลเดิมยังคงอยู่');
  records.budgets=payload.table.rows.map(row=>{const v=id=>row.c[cols.findIndex(c=>c.id===id)]?.v??null;return {wbs:v('T'),allocated:v('U'),approved:v('V'),remaining:v('W')}}).filter(r=>typeof r.wbs==='string'&&r.wbs.startsWith('I-'));
@@ -28,7 +28,7 @@ function readSheet(config){return new Promise((resolve,reject)=>{
  const timer=setTimeout(()=>{clean();reject(Error('หมดเวลารอ Google Sheets'))},25000);
  window[callback]=data=>{clean();try{resolve(parseSheet(data,config.name))}catch(e){reject(e)}};
  script.onerror=()=>{clean();reject(Error('เชื่อมต่อ Google Sheets ไม่สำเร็จ กรุณาตรวจสิทธิ์การอ่านหรือลองใหม่'))};
- const params=new URLSearchParams({gid:config.gid,sheet:config.name,range:'A:W',tq:config.name==='HB_2-JA_2-M4_2'?'select A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W':'select A,B,C,D,E,J,M,N,O,Q,T,U,V,W',headers:'1',tqx:'out:json;responseHandler:'+callback,_:String(Date.now())});
+ const params=new URLSearchParams({gid:config.gid,sheet:config.name,range:'A:W',tq:'select A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W',headers:'1',tqx:'out:json;responseHandler:'+callback,_:String(Date.now())});
  script.src='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?'+params;
  document.head.appendChild(script);
 })}
@@ -73,19 +73,21 @@ function renderStatusStrip(){
 }
 
 var fullPage=0,fullColumnPage=0,fullRows=[];
+function overviewSource(){return $('group').value==='JA_3'?'HB_3-JA_3-M4_3':'HB_2-JA_2-M4_2'}
 function renderFullOverview(){
- fullRows=raw.filter(r=>r.source==='HB_2-JA_2-M4_2'&&scopeMatch(r)&&(!$('center').value||r.center===$('center').value)&&(!$('office').value||r.office===$('office').value)&&(!$('status').value||r.status===$('status').value)&&(!$('q').value.trim()||[r.wbs,r.name,r.center,r.office].join(' ').toLowerCase().includes($('q').value.trim().toLowerCase())));
+ fullRows=raw.filter(r=>r.source===overviewSource()&&scopeMatch(r)&&(!$('center').value||r.center===$('center').value)&&(!$('office').value||r.office===$('office').value)&&(!$('status').value||r.status===$('status').value)&&(!$('q').value.trim()||[r.wbs,r.name,r.center,r.office].join(' ').toLowerCase().includes($('q').value.trim().toLowerCase())));
  fullPage=0;drawFullOverview();
 }
 function drawFullOverview(){
+ $('overviewSourceLabel').textContent=overviewSource()+' · ข้อมูล A–S';
  const groups=[[0,1,2,3,4],[5,6,7,8,9],[10,11,12,13,14],[15,16,17,18]];
  const letters=['A–E','F–J','K–O','P–S'];const indexes=groups[fullColumnPage];
- const heads=raw.find(r=>r.source==='HB_2-JA_2-M4_2'&&r.fullHeaders)?.fullHeaders||[];
+ const heads=raw.find(r=>r.source===overviewSource()&&r.fullHeaders)?.fullHeaders||[];
  $('fullColumnTabs').innerHTML=letters.map((l,i)=>'<button data-columns="'+i+'" class="'+(i===fullColumnPage?'active':'')+'">'+l+'</button>').join('');
  $('fullColumnTabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{fullColumnPage=Number(b.dataset.columns);drawFullOverview()});
  $('fullHead').innerHTML='<tr><th>WBS / ชื่องาน</th>'+indexes.filter(i=>i!==3&&i!==4).map(i=>'<th>'+esc(String.fromCharCode(65+i)+' · '+heads[i])+'</th>').join('')+'</tr>';
  const pages=Math.max(1,Math.ceil(fullRows.length/4));fullPage=Math.min(fullPage,pages-1);
- $('fullBody').innerHTML=fullRows.slice(fullPage*4,fullPage*4+4).map(r=>'<tr><td><button class="wbs" data-full-id="'+esc(r.wbs)+'">'+esc(r.wbs)+'</button><small>'+esc(r.name)+'</small></td>'+indexes.filter(i=>i!==3&&i!==4).map(i=>'<td>'+esc(r.fullRow?.[i]??'—')+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="6">ไม่พบข้อมูลตามตัวกรองในชีต HB_2-JA_2-M4_2</td></tr>';
+ $('fullBody').innerHTML=fullRows.slice(fullPage*4,fullPage*4+4).map(r=>'<tr><td><button class="wbs" data-full-id="'+esc(r.wbs)+'">'+esc(r.wbs)+'</button><small>'+esc(r.name)+'</small></td>'+indexes.filter(i=>i!==3&&i!==4).map(i=>'<td>'+esc(r.fullRow?.[i]??'—')+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="6">ไม่พบข้อมูลตามตัวกรองในชีตที่เลือก</td></tr>';
  $('fullBody').querySelectorAll('button').forEach(b=>b.onclick=()=>detail(b.dataset.fullId));
  $('fullCount').textContent=fullRows.length+' รายการ · เลือกกลุ่มคอลัมน์ด้านขวาเพื่อดูข้อมูลครบ A–S';
  $('fullPage').textContent='หน้า '+(fullPage+1)+' / '+pages;$('fullPrev').disabled=fullPage===0;$('fullNext').disabled=fullPage>=pages-1;
