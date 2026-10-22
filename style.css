@@ -216,3 +216,18 @@ header.project-header .stamp #refresh{font-size:10px;min-height:23px;padding:3px
 .full-overview-table td{overflow-wrap:anywhere;font-size:16px;padding:13px 10px}
 .full-overview-table td small{-webkit-line-clamp:2;font-size:15px}
 @media(max-width:700px){#metrics.overview-table-panel{padding:16px!important}.full-overview-table{min-width:750px}}
+
+/* Full A–S overview grid */
+#fullColumnTabs{display:none!important}
+#metrics .tablewrap{overflow-x:auto!important;overflow-y:auto;scrollbar-width:auto;border:1px solid #eee5f1;border-radius:10px}
+.full-overview-table{width:3300px;min-width:3300px;table-layout:fixed;font-size:16px}
+.full-overview-table th,.full-overview-table td{width:155px!important;min-width:155px;white-space:normal;overflow-wrap:anywhere;padding:13px 11px}
+.full-overview-table th:first-child,.full-overview-table td:first-child{width:65px!important;min-width:65px}
+.full-overview-table th:nth-child(2),.full-overview-table td:nth-child(2){width:170px!important}
+.full-overview-table th:nth-child(4),.full-overview-table td:nth-child(4){width:230px!important}
+.full-overview-table th:nth-child(5),.full-overview-table td:nth-child(5){width:400px!important}
+.full-overview-table th:nth-child(16),.full-overview-table td:nth-child(16){width:300px!important}
+.full-overview-table th{position:sticky;top:0;z-index:1}
+.full-overview-table td:nth-child(4){background:#fcf8fd}
+.full-overview-table tbody tr:hover td{background:#f8f0fa}
+.full-overview-table .wbs{font-size:16px;white-space:nowrap}
