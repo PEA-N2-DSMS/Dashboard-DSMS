@@ -76,7 +76,7 @@ var fullPage=0,fullColumnPage=0,fullRows=[];
 function overviewSource(){const sourceByGroup={HB_2:'HB_2-JA_2-M4_2',JA_2:'HB_2-JA_2-M4_2',M4_2:'HB_2-JA_2-M4_2',HB_3:'HB_3-JA_3-M4_3',JA_3:'HB_3-JA_3-M4_3',M4_3:'HB_3-JA_3-M4_3'};return sourceByGroup[$('group').value]||'ทั้งสองชีต'}
 function renderFullOverview(){
  fullRows=raw.filter(r=>(!$('group').value||r.source===overviewSource())&&scopeMatch(r)&&(!$('center').value||r.center===$('center').value)&&(!$('office').value||r.office===$('office').value)&&(!$('status').value||r.status===$('status').value)&&(!$('q').value.trim()||[r.wbs,r.name,r.center,r.office].join(' ').toLowerCase().includes($('q').value.trim().toLowerCase())));
- fullPage=0;drawFullOverview();
+ fullPage=0;officeChartPage=0;drawFullOverview();renderOfficeChart();
 }
 function drawFullOverview(){
  $('overviewSourceLabel').textContent=overviewSource();
@@ -91,3 +91,24 @@ function drawFullOverview(){
  $('fullPage').textContent='หน้า '+(fullPage+1)+' / '+pages;$('fullPrev').disabled=fullPage===0;$('fullNext').disabled=fullPage>=pages-1;
 }
 $('fullPrev').onclick=()=>{fullPage--;drawFullOverview()};$('fullNext').onclick=()=>{fullPage++;drawFullOverview()};
+
+var officeChartPage=0;
+const OFFICE_CATEGORIES=['HB_2','HB_3','JA_2','JA_3','M4_2','M4_3'];
+const OFFICE_COLORS=['#74045f','#ad6ca4','#2563eb','#6b9bed','#c17d13','#e4b95b'];
+function renderOfficeChart(){
+ const groups=new Map();
+ fullRows.forEach(r=>{const office=r.office||'ไม่ระบุการไฟฟ้า',category=String(r.group||'').split(' ')[0];if(!groups.has(office))groups.set(office,{});const counts=groups.get(office);counts[category]=(counts[category]||0)+1;});
+ const rows=[...groups].map(([name,counts])=>({name,counts,total:Object.values(counts).reduce((a,b)=>a+b,0)})).sort((a,b)=>b.total-a.total||a.name.localeCompare(b.name,'th'));
+ const categories=[...OFFICE_CATEGORIES,...new Set(fullRows.map(r=>String(r.group||'').split(' ')[0]).filter(c=>!OFFICE_CATEGORIES.includes(c)))].filter(c=>rows.some(r=>r.counts[c]));
+ const label=c=>c.replace('_2','.2000').replace('_3','.3000');
+ const color=c=>OFFICE_COLORS[OFFICE_CATEGORIES.indexOf(c)]||'#777';
+ const pages=Math.max(1,Math.ceil(rows.length/5));officeChartPage=Math.min(officeChartPage,pages-1);
+ const max=Math.max(1,...rows.map(r=>r.total));
+ $('officeChartLegend').innerHTML=categories.map(c=>'<span><i style="background:'+color(c)+'"></i>'+esc(label(c))+'</span>').join('');
+ $('officeChartBars').innerHTML=rows.slice(officeChartPage*5,officeChartPage*5+5).map(r=>'<div class="office-chart-row"><span>'+esc(r.name)+'</span><div class="office-chart-track" role="img" aria-label="'+esc(r.name+' รวม '+r.total+' งาน; '+categories.filter(c=>r.counts[c]).map(c=>label(c)+' '+r.counts[c]+' งาน').join(', '))+'">'+categories.filter(c=>r.counts[c]).map(c=>'<div title="'+esc(label(c)+': '+r.counts[c]+' งาน')+'" style="width:'+r.counts[c]/max*100+'%;background:'+color(c)+'"><span>'+r.counts[c]+'</span></div>').join('')+'</div><b>'+r.total+'</b></div>').join('')||'<p class="muted">ไม่พบข้อมูลตามตัวกรอง</p>';
+ $('officeChartSummary').textContent=fullRows.length+' งาน · '+rows.length+' การไฟฟ้า · หน่วย: งาน';
+ $('officeChartPage').textContent='หน้า '+(officeChartPage+1)+' / '+pages;
+ $('officeChartPrev').disabled=officeChartPage===0;$('officeChartNext').disabled=officeChartPage>=pages-1;
+}
+$('officeChartPrev').onclick=()=>{officeChartPage--;renderOfficeChart()};
+$('officeChartNext').onclick=()=>{officeChartPage++;renderOfficeChart()};
