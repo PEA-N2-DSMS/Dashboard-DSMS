@@ -252,3 +252,9 @@ header.project-header .stamp #refresh{font-size:10px;min-height:23px;padding:3px
 #metrics .full-overview-table th,#metrics .full-overview-table td,#metrics .full-overview-table th:nth-child(n),#metrics .full-overview-table td:nth-child(n){text-align:center!important;vertical-align:middle!important}
 #metrics .full-overview-table .equal-cell-content{display:flex!important;flex-direction:column;align-items:center;justify-content:safe center;text-align:center!important}
 #metrics .full-overview-table .wbs{text-align:center!important;margin:auto;display:block}
+
+/* Nine selected columns, equal width and centered. */
+#metrics .full-overview-table{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important}
+#metrics .full-overview-table th,#metrics .full-overview-table td,#metrics .full-overview-table th:first-child,#metrics .full-overview-table td:first-child,#metrics .full-overview-table th:nth-child(n),#metrics .full-overview-table td:nth-child(n){width:11.111111%!important;min-width:0!important;max-width:none!important;text-align:center!important;vertical-align:middle!important;font-size:clamp(12px,.92vw,17px)!important;padding:7px 5px!important}
+#metrics .full-overview-table .wbs{font-size:inherit!important;text-align:center!important}
+@media(max-width:700px){#metrics .full-overview-table th,#metrics .full-overview-table td{font-size:10px!important;padding:4px 2px!important}}
