@@ -206,3 +206,13 @@ header.project-header .stamp #refresh{font-size:10px;min-height:23px;padding:3px
 /* Remove all four overview cards, including cached markup. */
 #metrics .metric{display:none!important}
 #metrics{padding:0!important;margin:0!important;gap:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+
+#metrics.overview-table-panel{display:flex;flex-direction:column;align-content:initial;flex:1;min-height:0;background:white!important;border:1px solid #e5dced!important;border-radius:18px;padding:20px 24px!important}
+.full-column-tabs{display:flex;gap:8px;flex-wrap:wrap}.full-column-tabs button{font-size:16px;padding:6px 15px;min-height:36px}.full-column-tabs button.active{background:#74045f;color:white}
+#metrics .tablewrap{flex:1;min-height:0;overflow-x:auto}
+.full-overview-table{min-width:0;table-layout:fixed;width:100%;font-size:16px}
+.full-overview-table th{width:auto!important;white-space:normal;overflow-wrap:anywhere;font-size:15px}
+.full-overview-table th:first-child{width:30%!important}
+.full-overview-table td{overflow-wrap:anywhere;font-size:16px;padding:13px 10px}
+.full-overview-table td small{-webkit-line-clamp:2;font-size:15px}
+@media(max-width:700px){#metrics.overview-table-panel{padding:16px!important}.full-overview-table{min-width:750px}}
