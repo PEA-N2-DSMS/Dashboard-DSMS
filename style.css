@@ -281,3 +281,13 @@ header.project-header .stamp #refresh{font-size:10px;min-height:23px;padding:3px
 .office-chart-track>div{flex-shrink:0;width:100%;min-height:0;overflow:hidden}
 .office-chart-row>span{order:2;display:block;width:100%;text-align:center;overflow-wrap:anywhere;font-size:14px;line-height:1.4;min-height:40px}
 @media(max-width:700px){#officeChartBars{gap:8px;padding:10px 0 0}.office-chart-row>span{font-size:11px}.office-chart-track{width:80%}.office-chart-row>b{font-size:13px}}
+
+/* Show every office together on one chart. */
+.office-chart-pager{display:none!important}
+#officeChartBars{gap:3px;padding-left:0;padding-right:0;justify-content:space-between}
+.office-chart-row{flex:1 1 0;max-width:none;min-width:0;gap:4px}
+.office-chart-track{width:90%;max-width:none}
+.office-chart-row>span{font-size:clamp(8px,.72vw,13px);line-height:1.35;min-height:62px;writing-mode:vertical-rl;max-height:115px;align-self:center;width:auto}
+.office-chart-row>b{font-size:clamp(9px,.8vw,14px)}
+.office-chart-track>div{font-size:clamp(7px,.65vw,12px)}
+@media(max-width:700px){#officeChartBars{gap:1px}.office-chart-row>span{font-size:8px}.office-chart-row>b{font-size:8px}.office-chart-track{width:94%}}
