@@ -157,3 +157,28 @@ td small{font-size:16px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-ori
 .view-tabs{margin:10px 0}.view-tabs button{padding:7px 19px;min-height:40px}.filters{padding:10px 14px;margin-bottom:10px}
 @media(max-width:1000px){#statusStrip{grid-template-columns:repeat(6,minmax(0,1fr))}#statuses{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){#statusStrip{grid-template-columns:repeat(4,minmax(0,1fr))}#statuses{grid-template-columns:1fr}.status-heading{flex-wrap:wrap}}
+
+/* PEA identity: Pantone 7650 C RGB 116,4,95; Pantone 1245 C RGB 199,145,27 */
+:root{--pea-purple:#74045f;--pea-gold:#c7911b}
+header.project-header{background:var(--pea-purple);border-bottom-color:var(--pea-gold)}
+.project-buttons button.active,.view-tabs button.active{background:var(--pea-purple);border-color:var(--pea-purple)}
+.project-header #refresh{color:var(--pea-purple)}
+.metric:first-child{background:linear-gradient(125deg,#74045f,#920d7b)}
+#statusStrip{grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+#statusStrip button{padding:7px 9px;min-height:52px;align-items:center;border-left:4px solid var(--stage);color:var(--stage);background:var(--stage-bg)}
+#statusStrip button span{font-size:16px;font-weight:700;min-width:0;text-align:left}
+#statusStrip button small{display:block;font-size:12px;line-height:1.35;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+#statusStrip button b{font-size:21px;margin-left:7px}
+#statusStrip button.active{background:var(--stage);color:#fff;border-color:var(--stage)}
+[data-stage="A"]{--stage:#74045f;--stage-bg:#f8eaf5}
+[data-stage="B"]{--stage:#0765a3;--stage-bg:#e9f4fc}
+[data-stage="C"]{--stage:#187345;--stage-bg:#e9f7ef}
+[data-stage="D"]{--stage:#b54c08;--stage-bg:#fff1e6}
+[data-stage="F"]{--stage:#b50b60;--stage-bg:#fcebf3}
+[data-stage="E"],[data-stage="Z"]{--stage:#67606f;--stage-bg:#f1eef4}
+.badge[data-stage]{background:var(--stage-bg);color:var(--stage)}
+.status-center .badge{white-space:normal;font-size:13px;text-align:left}
+.status-heading strong{color:var(--pea-purple)}
+.status-always{padding:8px 12px}
+@media(max-width:1100px){#statusStrip{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:700px){#statusStrip{grid-template-columns:repeat(3,minmax(0,1fr))}#statusStrip button small{font-size:11px}}
