@@ -17,6 +17,7 @@ function parseSheet(payload){
  return {wbs:v(3),name:v(4),center:v(1),office:v(2),group:v(16),status:v(9),planValue:v(12),kpi:text(13),deadline:text(14),source:'HB_2-JA_2-M4_2',sequence:v(0)};
  }).filter(r=>typeof r.sequence==='number'&&typeof r.wbs==='string'&&r.wbs.startsWith('I-'));
  if(!records.length)throw Error('ไม่พบรายการงาน ข้อมูลเดิมยังคงอยู่');
+ records.budgets=payload.table.rows.map(row=>{const v=id=>row.c[cols.findIndex(c=>c.id===id)]?.v??null;return {wbs:v('T'),allocated:v('U'),approved:v('V'),remaining:v('W')}}).filter(r=>typeof r.wbs==='string'&&r.wbs.startsWith('I-'));
  return records;
 }
 function readLive(){return new Promise((resolve,reject)=>{
@@ -25,14 +26,14 @@ function readLive(){return new Promise((resolve,reject)=>{
  const timer=setTimeout(()=>{clean();reject(Error('หมดเวลารอ Google Sheets'))},25000);
  window[callback]=data=>{clean();try{resolve(parseSheet(data))}catch(e){reject(e)}};
  script.onerror=()=>{clean();reject(Error('เชื่อมต่อ Google Sheets ไม่สำเร็จ กรุณาตรวจสิทธิ์การอ่านหรือลองใหม่'))};
- const params=new URLSearchParams({gid:'218987743',sheet:'HB_2-JA_2-M4_2',range:'A:Q',tq:'select A,B,C,D,E,J,M,N,O,Q',headers:'1',tqx:'out:json;responseHandler:'+callback,_:String(Date.now())});
+ const params=new URLSearchParams({gid:'218987743',sheet:'HB_2-JA_2-M4_2',range:'A:W',tq:'select A,B,C,D,E,J,M,N,O,Q,T,U,V,W',headers:'1',tqx:'out:json;responseHandler:'+callback,_:String(Date.now())});
  script.src='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?'+params;
  document.head.appendChild(script);
 })}
 function applyRecords(records){raw=records;all=[...new Map(raw.map(r=>[r.wbs,r])).values()];keys.forEach(k=>options(k,all));update()}
 async function refresh(){
  $('refresh').disabled=true;$('refresh').textContent='กำลังดึงข้อมูล…';$('error').textContent='';
- try{const records=await readLive();applyRecords(records);$('date').textContent='ดึงสำเร็จ '+new Date().toLocaleString('th-TH',{timeZone:'Asia/Bangkok'});}
+ try{const records=await readLive();applyRecords(records);renderBudget(records.budgets||[]);$('date').textContent='ดึงสำเร็จ '+new Date().toLocaleString('th-TH',{timeZone:'Asia/Bangkok'});}
  catch(e){$('error').textContent='ดึงข้อมูลล่าสุดไม่สำเร็จ: '+e.message+(all.length?' · แสดงข้อมูลเดิม':'');if(!all.length)$('date').textContent='ยังไม่มีข้อมูล';}
  finally{$('refresh').disabled=false;$('refresh').textContent='↻ ดึงข้อมูลล่าสุด'}
 }
@@ -46,3 +47,9 @@ document.querySelectorAll('.view-tabs button').forEach(b=>b.onclick=()=>selectVi
 $('q').addEventListener('input',()=>{if($('q').value.trim())selectView('records')});
 $('bars').addEventListener('click',e=>{if(e.target.closest('button'))selectView('records')});
 selectView('overview');
+
+function renderBudget(rows){
+ const totals=k=>rows.reduce((sum,r)=>sum+(typeof r[k]==='number'?r[k]:0),0);
+ $('budgetMetrics').innerHTML=[['ได้รับจัดสรร',totals('allocated')],['อนุมัติให้ กฟฟ.ในสังกัด',totals('approved')],['คงเหลือ',totals('remaining')]].map(([name,v])=>'<div class="metric"><small>'+name+'</small><strong>'+fmt(v)+'</strong><p>บาท</p></div>').join('');
+ $('budgetRows').innerHTML=rows.map(r=>'<tr><td>'+esc(r.wbs)+'</td>'+['allocated','approved','remaining'].map(k=>'<td class="num">'+fmt(r[k])+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="4">ไม่พบตารางงบประมาณในคอลัมน์ T–W</td></tr>';
+}
