@@ -258,3 +258,17 @@ header.project-header .stamp #refresh{font-size:10px;min-height:23px;padding:3px
 #metrics .full-overview-table th,#metrics .full-overview-table td,#metrics .full-overview-table th:first-child,#metrics .full-overview-table td:first-child,#metrics .full-overview-table th:nth-child(n),#metrics .full-overview-table td:nth-child(n){width:11.111111%!important;min-width:0!important;max-width:none!important;text-align:center!important;vertical-align:middle!important;font-size:clamp(12px,.92vw,17px)!important;padding:7px 5px!important}
 #metrics .full-overview-table .wbs{font-size:inherit!important;text-align:center!important}
 @media(max-width:700px){#metrics .full-overview-table th,#metrics .full-overview-table td{font-size:10px!important;padding:4px 2px!important}}
+
+/* Office chart below the overview table. */
+#metrics.overview-table-panel{overflow-y:auto!important}
+#metrics .tablewrap{flex:none;max-height:400px}
+.office-chart{flex-shrink:0;border-top:1px solid #eee5f1;margin-top:12px;padding-top:12px}
+.office-chart-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.office-chart h2{font-size:20px;margin:0}.office-chart p{font-size:13px;margin:4px 0 8px}
+.office-chart-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:13px}
+.office-chart-legend span{display:flex;align-items:center;gap:5px}.office-chart-legend i{width:12px;height:12px;border-radius:3px}
+.office-chart-row{display:grid;grid-template-columns:150px minmax(0,1fr) 45px;gap:12px;align-items:center;margin:7px 0;font-size:15px}
+.office-chart-track{display:flex;height:26px;background:#f5f1f7;border-radius:5px;overflow:hidden}
+.office-chart-track>div{display:flex;align-items:center;justify-content:center;color:white;font-size:12px;min-width:0}.office-chart-track span{overflow:hidden}
+.office-chart-pager{display:flex;align-items:center;justify-content:flex-end;gap:10px;font-size:13px;margin-top:8px}.office-chart-pager button{font-size:12px;padding:4px 10px;min-height:28px}
+@media(max-width:700px){.office-chart-row{grid-template-columns:90px minmax(0,1fr) 30px;font-size:12px;gap:6px}.office-chart h2{font-size:17px}}
