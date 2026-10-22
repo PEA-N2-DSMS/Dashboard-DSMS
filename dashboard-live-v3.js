@@ -80,16 +80,14 @@ function renderFullOverview(){
 }
 function drawFullOverview(){
  $('overviewSourceLabel').textContent=overviewSource()+' · ข้อมูล A–S';
- const groups=[[0,1,2,3,4],[5,6,7,8,9],[10,11,12,13,14],[15,16,17,18]];
- const letters=['A–E','F–J','K–O','P–S'];const indexes=groups[fullColumnPage];
+ const indexes=Array.from({length:19},(_,i)=>i);
  const heads=raw.find(r=>(!$('group').value||r.source===overviewSource())&&r.fullHeaders)?.fullHeaders||[];
- $('fullColumnTabs').innerHTML=letters.map((l,i)=>'<button data-columns="'+i+'" class="'+(i===fullColumnPage?'active':'')+'">'+l+'</button>').join('');
- $('fullColumnTabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{fullColumnPage=Number(b.dataset.columns);drawFullOverview()});
- $('fullHead').innerHTML='<tr><th>WBS / ชื่องาน</th>'+indexes.filter(i=>i!==3&&i!==4).map(i=>'<th>'+esc(String.fromCharCode(65+i)+' · '+heads[i])+'</th>').join('')+'</tr>';
+ $('fullColumnTabs').innerHTML='';
+ $('fullHead').innerHTML='<tr>'+indexes.map(i=>'<th>'+esc(String.fromCharCode(65+i))+' · '+esc(heads[i]||'')+'</th>').join('')+'</tr>';
  const pages=Math.max(1,Math.ceil(fullRows.length/4));fullPage=Math.min(fullPage,pages-1);
- $('fullBody').innerHTML=fullRows.slice(fullPage*4,fullPage*4+4).map(r=>'<tr><td><button class="wbs" data-full-id="'+esc(r.wbs)+'">'+esc(r.wbs)+'</button><small>'+esc(r.name)+'</small></td>'+indexes.filter(i=>i!==3&&i!==4).map(i=>'<td>'+esc(r.fullRow?.[i]??'—')+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="6">ไม่พบข้อมูลตามตัวกรองในชีตที่เลือก</td></tr>';
+ $('fullBody').innerHTML=fullRows.slice(fullPage*4,fullPage*4+4).map(r=>'<tr>'+indexes.map(i=>'<td>'+ (i===3?'<button class="wbs" data-full-id="'+esc(r.wbs)+'">'+esc(r.wbs)+'</button>':esc(r.fullRow?.[i]??'—'))+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="19">ไม่พบข้อมูลตามตัวกรองในชีตที่เลือก</td></tr>';
  $('fullBody').querySelectorAll('button').forEach(b=>b.onclick=()=>detail(b.dataset.fullId));
- $('fullCount').textContent=fullRows.length+' รายการ · เลือกกลุ่มคอลัมน์ด้านขวาเพื่อดูข้อมูลครบ A–S';
+ $('fullCount').textContent=fullRows.length+' รายการ · แสดงคอลัมน์ A–S ครบ 19 คอลัมน์';
  $('fullPage').textContent='หน้า '+(fullPage+1)+' / '+pages;$('fullPrev').disabled=fullPage===0;$('fullNext').disabled=fullPage>=pages-1;
 }
 $('fullPrev').onclick=()=>{fullPage--;drawFullOverview()};$('fullNext').onclick=()=>{fullPage++;drawFullOverview()};
