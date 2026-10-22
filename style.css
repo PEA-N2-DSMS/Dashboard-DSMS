@@ -291,3 +291,12 @@ header.project-header .stamp #refresh{font-size:10px;min-height:23px;padding:3px
 .office-chart-row>b{font-size:clamp(9px,.8vw,14px)}
 .office-chart-track>div{font-size:clamp(7px,.65vw,12px)}
 @media(max-width:700px){#officeChartBars{gap:1px}.office-chart-row>span{font-size:8px}.office-chart-row>b{font-size:8px}.office-chart-track{width:94%}}
+
+/* Horizontal chart with every office on the same page. */
+#officeChartBars{display:block;min-height:0;padding:10px 0;border-bottom:0}
+.office-chart-row{display:grid;grid-template-columns:160px minmax(0,1fr) 45px;align-items:center;gap:12px;max-width:none;margin:8px 0}
+.office-chart-row>span{order:0;writing-mode:horizontal-tb;width:auto;min-height:0;max-height:none;text-align:right;font-size:15px;line-height:1.4}
+.office-chart-track{order:1;flex-direction:row;align-items:stretch;justify-content:flex-start;width:100%;max-width:none;height:28px;min-height:28px;background:#f5f1f7;border-radius:5px}
+.office-chart-track>div{height:100%;flex-shrink:0;font-size:12px}
+.office-chart-row>b{order:2;font-size:15px;line-height:1.4;text-align:center}
+@media(max-width:700px){.office-chart-row{grid-template-columns:100px minmax(0,1fr) 30px;gap:6px}.office-chart-row>span,.office-chart-row>b{font-size:12px}.office-chart-track>div{font-size:10px}}
