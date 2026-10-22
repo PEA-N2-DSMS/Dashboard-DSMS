@@ -300,3 +300,8 @@ header.project-header .stamp #refresh{font-size:10px;min-height:23px;padding:3px
 .office-chart-track>div{height:100%;flex-shrink:0;font-size:12px}
 .office-chart-row>b{order:2;font-size:15px;line-height:1.4;text-align:center}
 @media(max-width:700px){.office-chart-row{grid-template-columns:100px minmax(0,1fr) 30px;gap:6px}.office-chart-row>span,.office-chart-row>b{font-size:12px}.office-chart-track>div{font-size:10px}}
+
+/* Extend overview table to show all fifteen rows on each page. */
+#metrics.overview-table-panel{display:flex;overflow-y:auto!important}
+#metrics .tablewrap{flex:none!important;max-height:none!important;height:auto!important;overflow-y:visible!important}
+#metrics>.tablehead,#metrics>#fullCount,#metrics>.pager{flex-shrink:0}
