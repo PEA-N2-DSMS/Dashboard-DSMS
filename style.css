@@ -272,3 +272,12 @@ header.project-header .stamp #refresh{font-size:10px;min-height:23px;padding:3px
 .office-chart-track>div{display:flex;align-items:center;justify-content:center;color:white;font-size:12px;min-width:0}.office-chart-track span{overflow:hidden}
 .office-chart-pager{display:flex;align-items:center;justify-content:flex-end;gap:10px;font-size:13px;margin-top:8px}.office-chart-pager button{font-size:12px;padding:4px 10px;min-height:28px}
 @media(max-width:700px){.office-chart-row{grid-template-columns:90px minmax(0,1fr) 30px;font-size:12px;gap:6px}.office-chart h2{font-size:17px}}
+
+/* Vertical stacked columns with a shared count scale. */
+#officeChartBars{display:flex;align-items:stretch;justify-content:space-around;gap:18px;min-height:255px;padding:12px 12px 0;border-bottom:1px solid #ddd1e3}
+.office-chart-row{display:flex;flex:1;min-width:0;max-width:180px;flex-direction:column;align-items:center;gap:6px;margin:0}
+.office-chart-row>b{order:0;font-size:16px;line-height:24px}
+.office-chart-track{order:1;display:flex;flex-direction:column-reverse;align-items:stretch;justify-content:flex-start;height:190px;min-height:190px;width:64%;max-width:100px;background:transparent;border-radius:5px 5px 0 0}
+.office-chart-track>div{flex-shrink:0;width:100%;min-height:0;overflow:hidden}
+.office-chart-row>span{order:2;display:block;width:100%;text-align:center;overflow-wrap:anywhere;font-size:14px;line-height:1.4;min-height:40px}
+@media(max-width:700px){#officeChartBars{gap:8px;padding:10px 0 0}.office-chart-row>span{font-size:11px}.office-chart-track{width:80%}.office-chart-row>b{font-size:13px}}
