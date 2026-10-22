@@ -84,10 +84,10 @@ function drawFullOverview(){
  const heads=raw.find(r=>(!$('group').value||r.source===overviewSource())&&r.fullHeaders)?.fullHeaders||[];
  $('fullColumnTabs').innerHTML='';
  $('fullHead').innerHTML='<tr>'+indexes.map(i=>'<th>'+esc(heads[i]||'')+'</th>').join('')+'</tr>';
- const pages=Math.max(1,Math.ceil(fullRows.length/4));fullPage=Math.min(fullPage,pages-1);
- $('fullBody').innerHTML=fullRows.slice(fullPage*4,fullPage*4+4).map(r=>'<tr>'+indexes.map(i=>'<td><div class="equal-cell-content">'+ (i===3?'<button class="wbs" data-full-id="'+esc(r.wbs)+'">'+esc(r.wbs)+'</button>':esc(r.fullRow?.[i]??'—'))+'</div></td>').join('')+'</tr>').join('')||'<tr><td colspan="9">ไม่พบข้อมูลตามตัวกรองในชีตที่เลือก</td></tr>';
+ const pages=Math.max(1,Math.ceil(fullRows.length/15));fullPage=Math.min(fullPage,pages-1);
+ $('fullBody').innerHTML=fullRows.slice(fullPage*15,fullPage*15+15).map(r=>'<tr>'+indexes.map(i=>'<td><div class="equal-cell-content">'+ (i===3?'<button class="wbs" data-full-id="'+esc(r.wbs)+'">'+esc(r.wbs)+'</button>':esc(r.fullRow?.[i]??'—'))+'</div></td>').join('')+'</tr>').join('')||'<tr><td colspan="9">ไม่พบข้อมูลตามตัวกรองในชีตที่เลือก</td></tr>';
  $('fullBody').querySelectorAll('button').forEach(b=>b.onclick=()=>detail(b.dataset.fullId));
- $('fullCount').textContent=fullRows.length+' รายการ';
+ $('fullCount').textContent=fullRows.length+' รายการ · แสดงหน้าละ 15 รายการ';
  $('fullPage').textContent='หน้า '+(fullPage+1)+' / '+pages;$('fullPrev').disabled=fullPage===0;$('fullNext').disabled=fullPage>=pages-1;
 }
 $('fullPrev').onclick=()=>{fullPage--;drawFullOverview()};$('fullNext').onclick=()=>{fullPage++;drawFullOverview()};
