@@ -85,7 +85,7 @@ function drawFullOverview(){
  $('fullColumnTabs').innerHTML='';
  $('fullHead').innerHTML='<tr>'+indexes.map(i=>'<th>'+esc(String.fromCharCode(65+i))+' · '+esc(heads[i]||'')+'</th>').join('')+'</tr>';
  const pages=Math.max(1,Math.ceil(fullRows.length/4));fullPage=Math.min(fullPage,pages-1);
- $('fullBody').innerHTML=fullRows.slice(fullPage*4,fullPage*4+4).map(r=>'<tr>'+indexes.map(i=>'<td>'+ (i===3?'<button class="wbs" data-full-id="'+esc(r.wbs)+'">'+esc(r.wbs)+'</button>':esc(r.fullRow?.[i]??'—'))+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="19">ไม่พบข้อมูลตามตัวกรองในชีตที่เลือก</td></tr>';
+ $('fullBody').innerHTML=fullRows.slice(fullPage*4,fullPage*4+4).map(r=>'<tr>'+indexes.map(i=>'<td><div class="equal-cell-content">'+ (i===3?'<button class="wbs" data-full-id="'+esc(r.wbs)+'">'+esc(r.wbs)+'</button>':esc(r.fullRow?.[i]??'—'))+'</div></td>').join('')+'</tr>').join('')||'<tr><td colspan="19">ไม่พบข้อมูลตามตัวกรองในชีตที่เลือก</td></tr>';
  $('fullBody').querySelectorAll('button').forEach(b=>b.onclick=()=>detail(b.dataset.fullId));
  $('fullCount').textContent=fullRows.length+' รายการ · แสดงคอลัมน์ A–S ครบ 19 คอลัมน์';
  $('fullPage').textContent='หน้า '+(fullPage+1)+' / '+pages;$('fullPrev').disabled=fullPage===0;$('fullNext').disabled=fullPage>=pages-1;
