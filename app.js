@@ -17,7 +17,7 @@ function parseSheet(payload){
  const records=payload.table.rows.map(row=>{
  const cell=i=>row.c[cols.findIndex(c=>c.id===String.fromCharCode(65+i))],v=i=>cell(i)?.v??null,text=i=>cell(i)?.f??v(i);
  return {wbs:v(3),name:v(4),center:v(1),office:v(2),group:v(16),status:v(9),planValue:v(12),kpi:text(13),deadline:text(14),source:'HB_2-JA_2-M4_2',sequence:v(0)};
- }).filter(r=>typeof r.sequence==='number'&&typeof r.wbs==='string'&&r.wbs.startsWith('I-'));
+ }).filter(r=>typeof r.wbs==='string'&&/^I-\d{2}-B-[A-Z0-9]+\.(HB|JA|M4)\.[23]\d{3}$/i.test(r.wbs.trim())).map(r=>({...r,wbs:r.wbs.trim()}));
  if(!records.length)throw Error('ไม่พบรายการงาน ข้อมูลเดิมยังคงอยู่');
  records.budgets=payload.table.rows.map(row=>{const v=id=>row.c[cols.findIndex(c=>c.id===id)]?.v??null;return {wbs:v('T'),allocated:v('U'),approved:v('V'),remaining:v('W')}}).filter(r=>typeof r.wbs==='string'&&r.wbs.startsWith('I-'));
  return records;
