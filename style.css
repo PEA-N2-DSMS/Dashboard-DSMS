@@ -231,3 +231,10 @@ header.project-header .stamp #refresh{font-size:10px;min-height:23px;padding:3px
 .full-overview-table td:nth-child(4){background:#fcf8fd}
 .full-overview-table tbody tr:hover td{background:#f8f0fa}
 .full-overview-table .wbs{font-size:16px;white-space:nowrap}
+
+/* Uniform cell dimensions for the entire A–S grid */
+#metrics .full-overview-table{width:3800px!important;min-width:3800px!important;table-layout:fixed}
+#metrics .full-overview-table th,#metrics .full-overview-table td,#metrics .full-overview-table th:first-child,#metrics .full-overview-table td:first-child,#metrics .full-overview-table th:nth-child(n),#metrics .full-overview-table td:nth-child(n){width:200px!important;min-width:200px!important;max-width:200px!important;height:100px!important;padding:10px 12px!important;vertical-align:middle;box-sizing:border-box;border-right:1px solid #eee5f1;overflow:hidden}
+#metrics .full-overview-table th{height:100px!important}
+.equal-cell-content{height:78px;max-height:78px;overflow:auto;display:block;line-height:1.5;overflow-wrap:anywhere}
+#metrics .full-overview-table .wbs{white-space:normal;overflow-wrap:anywhere;font-size:16px}
