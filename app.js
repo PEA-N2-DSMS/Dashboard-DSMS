@@ -46,7 +46,7 @@ function selectView(view){
 document.querySelectorAll('.view-tabs button').forEach(b=>b.onclick=()=>selectView(b.dataset.view));
 $('q').addEventListener('input',()=>{if($('q').value.trim())selectView('records')});
 $('bars').addEventListener('click',e=>{if(e.target.closest('button'))selectView('records')});
-selectView('overview');
+selectView('budget');
 
 var currentBudgets=[];
 function renderBudget(rows){currentBudgets=rows;rows=rows.filter(r=>!$('group').value||r.wbs.includes('.'+$('group').value+'.'));
