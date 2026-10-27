@@ -308,6 +308,6 @@ header.project-header .stamp #refresh{font-size:10px;min-height:23px;padding:3px
 
 /* Alternating category buttons: white then purple. */
 .project-buttons button[data-project]:not([data-project=""]){background:#fff;color:#74045f;border:1px solid #d9c4df}
-.project-buttons button[data-project="HB_3"]:not([data-project=""]),.project-buttons button[data-project="JA_3"]:not([data-project=""]),.project-buttons button[data-project="M4_3"]:not([data-project=""]){background:#74045f;color:#fff;border-color:#74045f}
+.project-buttons button[data-project="HB_3"]:not([data-project=""]),.project-buttons button[data-project="JA_3"]:not([data-project=""]),.project-buttons button[data-project="M4_3"]:not([data-project=""]){background:#f8e6b5;color:#594013;border-color:#dfbd65}
 .project-buttons button[data-project]:not([data-project=""]).active{outline:3px solid #c7911b;outline-offset:2px;box-shadow:0 3px 10px #74045f26}
 .project-buttons button[data-project]:not([data-project=""]):hover{filter:brightness(.96)}
