@@ -335,3 +335,18 @@ header.project-header .stamp #refresh{font-size:10px;min-height:23px;padding:3px
 .search small{display:block;margin-top:5px;font-size:13px;line-height:1.5}
 
 .job-filter{position:relative;align-self:end;min-width:230px}.job-filter summary{cursor:pointer;padding:10px;border:1px solid #e5dceb;border-radius:11px;background:#fbf9fd}.job-options{position:absolute;z-index:30;right:0;top:100%;width:min(520px,85vw);padding:16px;background:white;border:1px solid #e5dceb;border-radius:12px;box-shadow:0 8px 24px #30253e26}.job-actions{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.job-actions button{font-size:14px}#jobChoices{max-height:320px;overflow:auto}.job-choice{display:flex;gap:10px;align-items:start;padding:8px;border-bottom:1px solid #eee;min-width:0}.job-choice input{width:18px;height:18px;min-height:18px;margin:4px 0;flex:0 0 18px;accent-color:#74045f}.job-choice small{display:block}.job-choice span{overflow-wrap:anywhere}
+
+/* Keep filter captions and controls on matching rows. */
+.filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:start;gap:16px 12px}
+.filters>label,.filters>.status-filter,.filters>.job-filter-field{min-width:0;margin:0;font-size:14px;line-height:21px;color:#786486}
+.filters>label{display:block}.filter-caption{display:block;line-height:21px}
+.filters>label>select,.filters>label>.office-search-wrap,.filters .search textarea,#statusMulti,.job-filter-field>.job-filter{margin-top:6px}
+.filters>label>select,.filters .office-search-wrap>input,.filters .search textarea,#statusMulti>summary,.job-filter>summary{height:46px;min-height:46px;padding:9px 10px;font-size:17px;line-height:26px;box-sizing:border-box}
+.filters .office-search-wrap>input{margin-top:0}
+.filters .search{grid-column:span 2}.filters .search textarea{resize:vertical}
+.job-filter-field>.job-filter{min-width:0;align-self:auto}
+.job-filter>summary{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.filters>#reset{height:46px;min-height:46px;align-self:start;margin-top:27px;white-space:nowrap}
+@media(min-width:1600px){.filters{grid-template-columns:repeat(4,minmax(0,1fr)) minmax(250px,1.6fr) minmax(190px,1.2fr) minmax(140px,.85fr) auto}.filters .search{grid-column:auto}}
+@media(max-width:700px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.filters .search{grid-column:1/-1}.filters>#reset{margin-top:27px}.job-options{left:0;right:auto}}
+@media(max-width:380px){.filters{grid-template-columns:minmax(0,1fr)}.filters>#reset{margin-top:0}.job-options{width:min(520px,calc(100vw - 66px))}}
