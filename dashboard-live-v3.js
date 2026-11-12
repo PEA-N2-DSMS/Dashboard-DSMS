@@ -51,6 +51,15 @@ async function refresh(){
 $('refresh').onclick=refresh;refresh();
 
 function selectView(view){
+ if(view==='records'){
+  // Record pages must grow with their rows, including when older CSS is cached.
+  [document.documentElement,document.body].forEach(el=>{el.style.setProperty('height','auto');el.style.setProperty('overflow-y','auto')});
+  document.querySelector('main').style.setProperty('height','auto');
+  const panel=document.querySelector('.records'),table=panel.querySelector('.tablewrap');
+  [panel,table].forEach(el=>{el.style.setProperty('flex','none');el.style.setProperty('height','auto');el.style.setProperty('max-height','none')});
+  table.style.setProperty('overflow','auto');
+ }
+
  document.querySelectorAll('.view-panel').forEach(p=>p.hidden=p.dataset.panel!==view);
  document.querySelectorAll('.view-tabs button').forEach(b=>{b.classList.toggle('active',b.dataset.view===view);b.setAttribute('aria-pressed',String(b.dataset.view===view))});
 }
