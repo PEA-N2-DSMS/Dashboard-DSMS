@@ -115,13 +115,13 @@ html[data-design="accent"] .budget-table td.num:last-child {
 }
 
 html[data-design="accent"] header.project-header .stamp {
-  display: grid;
-  justify-items: end;
+  display: flex;
+  align-items: center;
   align-self: start;
   gap: 5px;
   width: max-content;
   margin-block: 0;
-  padding: 7px;
+  padding: 4px;
   border: 1px solid #eaddea;
   border-radius: 12px;
   background: #fff;
@@ -142,7 +142,7 @@ html[data-design="accent"] header.project-header .stamp .stamp-compact-time {
   color: #5b2658;
   font-size: 12px;
   line-height: 1.35;
-  white-space: pre-line;
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 
@@ -159,9 +159,9 @@ html[data-design="accent"] header.project-header .stamp .stamp-compact-time[data
 html[data-design="accent"] header.project-header .stamp #refresh {
   display: grid;
   place-items: center;
-  grid-row: 1;
-  width: 42px;
-  height: 42px;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
   padding: 0;
   border: 1px solid #e6d9e7;
   border-radius: 11px;
@@ -180,7 +180,7 @@ html[data-design="accent"] header.project-header .stamp #refresh {
 
 html[data-design="accent"] header.project-header .stamp #refresh::before {
   content: "↻";
-  font-size: 25px;
+  font-size: 22px;
   line-height: 1;
 }
 
@@ -218,7 +218,7 @@ html[data-design="accent"] .budget-table td:nth-child(4) { --budget-heading-widt
 @media (max-width: 700px) {
   html[data-design="accent"] header.project-header {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) max-content;
+    grid-template-columns: minmax(0, 1fr);
     gap: 10px;
   }
 
@@ -290,8 +290,8 @@ html[data-design="accent"] .budget-table td:nth-child(4) { --budget-heading-widt
     const dateTime = text.match(/(\d{1,2}\/\d{1,2}\/\d{4})[,\s]+(\d{1,2}:\d{2})(?::\d{2})?/);
     const failed = error.textContent.startsWith('ดึงข้อมูลล่าสุดไม่สำเร็จ');
     const state = refreshButton.disabled ? 'loading' : failed ? 'error' : dateTime ? 'success' : 'loading';
-    const label = {loading: 'กำลังดึงข้อมูล', error: 'ดึงข้อมูลไม่สำเร็จ', success: 'โหลดข้อมูลล่าสุด'}[state];
-    const timestamp = dateTime ? '\n' + dateTime[1] + ' · ' + dateTime[2] : '';
+    const label = {loading: 'กำลังดึงข้อมูล', error: 'ดึงข้อมูลไม่สำเร็จ', success: 'อัปเดต'}[state];
+    const timestamp = dateTime ? ' ' + dateTime[1] + ' · ' + dateTime[2] : '';
     compactTime.textContent = label + timestamp;
     compactTime.dataset.state = state;
   }
