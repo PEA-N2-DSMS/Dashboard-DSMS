@@ -195,11 +195,13 @@ html[data-design="accent"] header.project-header .stamp #refresh:hover {
   background: #d9f0e3;
 }
 
+html[data-design="accent"] .budget-table th:first-child,
 html[data-design="accent"] .budget-table tbody td:first-child:not([colspan]) {
-  text-align: left;
+  text-align: right;
 }
 
-html[data-design="accent"] .budget-table tbody td:first-child:not([colspan])::before {
+html[data-design="accent"] .budget-table th:first-child::after,
+html[data-design="accent"] .budget-table tbody td:first-child:not([colspan])::after {
   display: inline-block;
   width: max(0px, calc((100% - 194px) / 2));
   content: "";
