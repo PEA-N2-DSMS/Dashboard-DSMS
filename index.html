@@ -21,7 +21,21 @@ main{height:auto;min-height:100dvh}
 .records{flex:none;min-height:0}
 .records>.tablewrap{flex:none;height:auto;max-height:none;overflow-x:auto;overflow-y:auto}
 </style><style id="budget-table-layout">
+.budget-panel {
+  max-width: 1240px;
+  width: 100%;
+  margin-inline: auto;
+  flex: 0 0 auto;
+}
+
+.budget-panel > .tablewrap {
+  border: 1px solid #e7ddeb;
+  border-radius: 14px;
+  background: #fff;
+}
+
 .budget-table {
+  min-width: 740px;
   table-layout: fixed;
 }
 
@@ -30,6 +44,55 @@ main{height:auto;min-height:100dvh}
   padding-inline: 14px;
   text-align: center;
   vertical-align: middle;
+}
+
+.budget-table th {
+  padding-block: 13px;
+  color: #fff;
+  background: #48245f;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.budget-table th + th {
+  border-inline-start: 1px solid #69497d;
+}
+
+.budget-table td {
+  padding-block: 13px;
+  border-bottom-color: #eee7f2;
+  font-size: 18px;
+}
+
+.budget-table tbody tr:nth-child(even) {
+  background: #fbf9fd;
+}
+
+.budget-table th:last-child {
+  background: #623482;
+}
+
+.budget-table td.num:last-child {
+  border-inline-start: 1px solid #e9def0;
+  background: #f4edf9;
+  color: #51266d;
+  font-weight: 700;
+}
+
+.budget-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.budget-panel > .muted {
+  margin: 12px 0 0;
+  font-size: 14px;
+}
+
+@media (max-width: 700px) {
+  .budget-panel {
+    padding: 12px;
+  }
 }
 </style>
 </head><body>
