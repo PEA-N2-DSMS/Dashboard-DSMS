@@ -207,15 +207,13 @@ html[data-design="accent"] .stamp-source-icon {
   height: 21px;
 }
 
-html[data-design="accent"] .budget-table th:first-child,
 html[data-design="accent"] .budget-table tbody td:first-child:not([colspan]) {
   text-align: left;
 }
 
-html[data-design="accent"] .budget-table th:first-child::before,
 html[data-design="accent"] .budget-table tbody td:first-child:not([colspan])::before {
   display: inline-block;
-  width: max(0px, calc((100% - 194px) / 2));
+  width: max(0px, calc((100% - var(--budget-wbs-width, 194px)) / 2));
   content: "";
 }
 
@@ -287,6 +285,22 @@ html[data-design="accent"] .budget-table td:nth-child(4) { --budget-heading-widt
     }
   });
   headings.forEach(heading => headingWidths.observe(heading));
+
+  const budgetRows = budgetTable.tBodies[0];
+  function centerWbsCodes() {
+    let width = 0;
+    const label = document.createRange();
+    for (const row of budgetRows.rows) {
+      const cell = row.cells[0];
+      if (!cell || cell.colSpan !== 1) continue;
+      label.selectNodeContents(cell);
+      width = Math.max(width, label.getBoundingClientRect().width);
+    }
+    if (width) budgetTable.style.setProperty('--budget-wbs-width', width + 'px');
+  }
+  new MutationObserver(centerWbsCodes).observe(budgetRows, {childList: true});
+  new ResizeObserver(centerWbsCodes).observe(budgetTable);
+  document.fonts.ready.then(centerWbsCodes);
 
   const status = document.getElementById('date');
   const compactTime = document.querySelector('.stamp-compact-time');
